@@ -1,5 +1,5 @@
 {
-  "name": "ova-dice-roller",
+  "name": "roll20-ova-dice-roller",
   "version": "0.0.1",
   "license": "MIT",
   "description": "API to roll dice for OVA in http://www.roll20.net",
@@ -7,7 +7,8 @@
     "type": "git",
     "url": "https://github.com/MrReasonable/roll20-ova-dice-roller.git"
   },
+  "jsHintConfig": "/*jshint freeze:true, strict:true, node:true, noempty:true, noarg:true, eqeqeq:true, nonbsp:true, bitwise:true, curly:true, undef:true, nonew:true, forin:true */",
   "dependencies": {
-    "bower": "^1.7.7"
+    "underscore": "^1.8.3"
   }
 }
