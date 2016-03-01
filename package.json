@@ -1,0 +1,13 @@
+{
+  "name": "ova-dice-roller",
+  "version": "0.0.1",
+  "license": "MIT",
+  "description": "API to roll dice for OVA in http://www.roll20.net",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MrReasonable/roll20-ova-dice-roller.git"
+  },
+  "dependencies": {
+    "bower": "^1.7.7"
+  }
+}
