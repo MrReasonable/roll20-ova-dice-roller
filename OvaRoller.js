@@ -1,8 +1,8 @@
-// Github:   https://github.com/shdwjk/Roll20API/blob/master/CthulhuTechDice/CthulhuTechDice.js
+// Github:   https://github.com/shdwjk/Roll20API/blob/master/OvaDice/OvaDice.js
 // By:       The Aaron, Arcane Scriptomancer
 // Contact:  https://app.roll20.net/users/104025/the-aaron
 
-var CthulhuTechDice = CthulhuTechDice || (function() {
+var OvaDice = OvaDice || (function() {
         'use strict';
 
         var version = '0.1.7',
@@ -10,11 +10,11 @@ var CthulhuTechDice = CthulhuTechDice || (function() {
             schemaVersion = 0.1,
 
             checkInstall = function() {
-                log('-=> CthulhuTechDice v'+version+' <=-  ['+(new Date(lastUpdate*1000))+']');
+                log('-=> OvaDice v'+version+' <=-  ['+(new Date(lastUpdate*1000))+']');
 
-                if( ! _.has(state,'CthulhuTechDice') || state.CthulhuTechDice.version !== schemaVersion) {
+                if( ! _.has(state,'OvaDice') || state.OvaDice.version !== schemaVersion) {
                     log('  > Updating Schema to v'+schemaVersion+' <');
-                    state.CthulhuTechDice = {
+                    state.OvaDice = {
                         version: schemaVersion
                     };
                 }
@@ -77,7 +77,7 @@ var CthulhuTechDice = CthulhuTechDice || (function() {
                     case '!wct':
                         w=true;
                     /* break; */ // Intentional drop through
-                    case '!ct':
+                    case '!ova':
 
                         if(args.length>1){
                             bonus = parseInt(args[1],10);
@@ -262,6 +262,6 @@ var CthulhuTechDice = CthulhuTechDice || (function() {
 on('ready',function() {
     'use strict';
 
-    CthulhuTechDice.CheckInstall();
-    CthulhuTechDice.RegisterEventHandlers();
+    OvaDice.CheckInstall();
+    OvaDice.RegisterEventHandlers();
 });
