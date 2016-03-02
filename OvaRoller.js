@@ -114,7 +114,7 @@ var OvaDice = OvaDice || (function () {
                                 return r;
                             }).join(', ') +
                             '">' + result.total + '</span>' +
-                            (reason !== undefined ? ' for ' + reason : '')
+                            (reason !== undefined ? reason : '')
                         ));
 
                         break;
