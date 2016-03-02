@@ -2,8 +2,6 @@
 // By:       The Aaron, Arcane Scriptomancer
 // Contact:  https://app.roll20.net/users/104025/the-aaron
 
-/*jshint freeze:true, strict:true, node:true, noempty:true, noarg:true, eqeqeq:true, nonbsp:true, bitwise:true, curly:true, undef:true, nonew:true, forin:true */
-
 var OvaDice = OvaDice || (function () {
         'use strict';
 
@@ -23,12 +21,12 @@ var OvaDice = OvaDice || (function () {
             },
 
             getDiceCounts = function (msg, idx) {
-                return ( msg.inlinerolls
-                && msg.inlinerolls[idx]
-                && msg.inlinerolls[idx].results
-                && msg.inlinerolls[idx].results.rolls[0]
-                && msg.inlinerolls[idx].results.rolls[0].results
-                && (_.reduce(_.map(msg.inlinerolls[idx].results.rolls[0].results, function (r) {
+                return (msg.inlinerolls &&
+                msg.inlinerolls[idx] &&
+                msg.inlinerolls[idx].results &&
+                msg.inlinerolls[idx].results.rolls[0] &&
+                msg.inlinerolls[idx].results.rolls[0].results &&
+                (_.reduce(_.map(msg.inlinerolls[idx].results.rolls[0].results, function (r) {
                         return r.v;
                     }).sort() || [], function (m, r) {
                     m[r] = (m[r] || 0) + 1;
@@ -51,8 +49,8 @@ var OvaDice = OvaDice || (function () {
                     diceCounts,
                     maxMultiple = 0,
                     diceArray,
-                    bonus,
                     result,
+                    reason,
                     w = false;
 
                 if (msg.type !== "api") {
@@ -73,142 +71,53 @@ var OvaDice = OvaDice || (function () {
 
                 args = msg.content.split(/\s+/);
                 switch (args.shift()) {
-                case '!wct':
-                    w = true;
+                    case '!wova':
+                        w = true;
                     /* break; */ // Intentional drop through
-                case '!ova':
+                    case '!ova':
+                        diceCounts = getDiceCounts(msg, 0);
+                        if (!diceCounts) {
+                            return;
+                        }
+                        diceArray = getDiceArray(diceCounts);
 
-                    if (args.length > 1) {
-                        bonus = parseInt(args[1], 10);
-                        bonus = _.isNaN(bonus) ? undefined : bonus;
-                    }
+                        if (args.length > 1) {
+                            reason = args.slice(1).join(' ');
+                        }
 
-                    diceCounts = getDiceCounts(msg, 0);
-                    if (!diceCounts) {
-                        return;
-                    }
-                    diceArray = getDiceArray(diceCounts);
 
-                    maxMultiple = _.chain(diceCounts)
-                        .map(function (c, r) {
-                            return {
-                                label: 'Best Set',
-                                roll: r,
-                                count: c,
-                                total: (r * c)
-                            };
-                        })
-                        .sortBy('total')
-                        .reverse()
-                        .first()
-                        .value();
-                    result = _.reduce([maxMultiple], function (m, e) {
-                        return ( (e && m && e.total > m.total ) ? e : m);
-                    });
+                        maxMultiple = _.chain(diceCounts)
+                            .map(function (c, r) {
+                                return {
+                                    label: 'Best Set',
+                                    roll: r,
+                                    count: c,
+                                    total: (r * c)
+                                };
+                            })
+                            .sortBy('total')
+                            .reverse()
+                            .first()
+                            .value();
+                        result = _.reduce([maxMultiple], function (m, e) {
+                            return ((e && m && e.total > m.total) ? e : m);
+                        });
 
-                    sendChat(msg.who, (w ? '/w gm ' : '/direct ') +
-                        '<div style="' +
-                        'background-color:#731c20;' +
-                        'padding: 6px;' +
-                        'margin-left: -45px;' +
-                        'text-align: center;' +
-                        'border-radius: 25px;' +
-                        '">' +
-                        '<div style="' +
-                        'background: #eae0e0;' +
-                        'color: #ffffff;' +
-                        'padding: 8px;' +
-                        'padding-left: 30px;' +
-                        'border-radius: 25px;' +
-                        'font-family: Arial, Verdana, Helvetica, sans-serif;' +
-                        'font-weight: bold;' +
-                        'postion: relative;' +
-                        '">' +
-                        '<div style="' +
-                        'background: #731c20;' +
-                        'padding: 8px;' +
-                        'float:right;' +
-                        'border: solid #731c20 1px;' +
-                        'width: 100px;' +
-                        'text-align: center;' +
-                        'margin-left: 8px;' +
-                        'border-radius: 25px;' +
-                        '">' +
-                        '<div style="' +
-                        'font-size: large;' +
-                        'color: #FFFFFF;' +
-                        'font-weight: bold;' +
-                        'border-radius: 25px;' +
-                        '">' +
-                        'Result' +
-                        '</div>' +
-                        '<div style="' +
-                        'font-size: 2em;' +
-                        'font-weight: bold;' +
-                        'margin-top: 8px;' +
-                        'margin-bottom: 12px;' +
-                        'border-radius: 25px;' +
-                        '">' +
-                        (result.total + (bonus || 0)) +
-                        '</div>' +
-                        (!_.isUndefined(bonus) ? (
-                                '<span style="' +
-                                'margin-top:8px;' +
-                                'padding: 1px 0px 1px .3em;' +
-                                    //'border: solid #323132 1px;'+
-                                'border: solid #731c20 1px;' +
-                                'border-radius: 1em;' +
-                                'background-color: #ab1e23;' +
-                                'font-weight: bold;' +
-                                '">' +
-                                '<span>' +
-                                result.total +
-                                '</span>' +
-                                ' + ' +
-                                '<span style="' +
-                                'border: solid #731c20 1px;' +
-                                'border-radius: 1em;' +
-                                'padding: 1px .5em;' +
-                                'background-color: #FFFFFF;' +
-                                'color: white;' +
-                                'font-weight: normal;' +
-                                '">' +
-                                bonus +
-                                '</span>' +
-                                '</span>'
-                            )
-                                : ''
-                        ) +
-                        '</div>' +
-                        '<div style="' +
-                        'background: #FFFFFF;' +
-                        'padding: 8px;' +
-                        'margin-right: 138px;' +
-                        'border: solid #731c20 1px;' +
-                        'text-align:center;' +
-                        'border-radius: 25px;' +
-                        '">' +
-                        '<div>' +
-                        _.map(diceArray, function (r) {
-                            return '<span style="' +
-                                'display:inline-block;' +
-                                'border-radius: 1em;' +
-                                'color: #000000;' +
-                                'border:2px solid #731c20;' +
-                                'background-color: #eae0e0;' +
-                                'padding:1px 5px;' +
-                                'margin: 1px 1px;' +
-                                'border-radius: 25px;' +
-                                '">' + r + '</span>';
-                        }).join('') +
-                        '</div>' +
-                        '</div>' +
-                        '<div style="clear:both;border-radius: 25px;"></div>' +
-                        '</div>' +
-                        '</div>'
-                    );
+                        sendChat(msg.who, (w ? '/w gm ' : '/em rolls ' +
+                            '<span class="importantroll"' +
+                            'style="border:2px solid #4A57ED;background-color: #FEF68E; ' +
+                                    'padding: 0 3px 0 3px;' +
+                                    'font-weight: bold;' +
+                                    'cursor: help;' +
+                                    'font-size: 1.1em;" title="' +
+                            _.map(diceArray, function (r) {
+                                return r;
+                            }).join(', ') +
+                            '">' + result.total + '</span>' +
+                            (reason !== undefined ? ' for ' + reason : '')
+                        ));
 
-                    break;
+                        break;
                 }
             },
 

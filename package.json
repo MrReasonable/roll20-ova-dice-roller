@@ -7,7 +7,21 @@
     "type": "git",
     "url": "https://github.com/MrReasonable/roll20-ova-dice-roller.git"
   },
-  "jsHintConfig": "/*jshint freeze:true, strict:true, node:true, noempty:true, noarg:true, eqeqeq:true, nonbsp:true, bitwise:true, curly:true, undef:true, nonew:true, forin:true */",
+  "jshintConfig": {
+    "freeze": true,
+    "strict": true,
+    "node": true,
+    "noempty": true,
+    "noarg": true,
+    "eqeqeq": true,
+    "nonbsp": true,
+    "bitwise": true,
+    "curly": true,
+    "undef": true,
+    "nonew": true,
+    "forin": true,
+    "predef": ["_"]
+  },
   "dependencies": {
     "underscore": "^1.8.3"
   }
